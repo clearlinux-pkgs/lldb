@@ -1,0 +1,30 @@
+From ea62f9ce754e1731fe14c36530eb57bdabc81f4f Mon Sep 17 00:00:00 2001
+From: Thiago Macieira <thiago.macieira@intel.com>
+Date: Wed, 30 Oct 2019 11:01:54 -0700
+Subject: [PATCH] Fix build with Python support: find intermediate files
+
+The buildsystem or swig puts them in the wrong dir. CMake is expecting
+in LLVM_LIBRARY_OUTPUT_INTDIR (lib64/python<version>), but whatever
+generated them put them in lib/python<version>.
+
+Reported at: https://bugs.llvm.org/show_bug.cgi?id=43852
+---
+ scripts/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/CMakeLists.txt b/scripts/CMakeLists.txt
+index 1a0ea96ff..a9eae06e2 100644
+--- a/scripts/CMakeLists.txt
++++ b/scripts/CMakeLists.txt
+@@ -48,7 +48,7 @@ if(NOT LLDB_BUILD_FRAMEWORK)
+     set(swig_python_subdir python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
+   endif()
+ 
+-  set(SWIG_PYTHON_DIR ${LLVM_LIBRARY_OUTPUT_INTDIR}/${swig_python_subdir})
++  set(SWIG_PYTHON_DIR ${LLVM_LIBRARY_OUTPUT_INTDIR}/../lib/${swig_python_subdir})
+   set(SWIG_INSTALL_DIR lib${LLVM_LIBDIR_SUFFIX})
+ 
+   # Install the LLDB python module
+-- 
+2.23.0
+

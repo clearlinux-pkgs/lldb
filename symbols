@@ -1,4 +1,5 @@
 liblldb.so.9:LLVM_9
+liblldb.so.9:PyInit__lldb
 liblldb.so.9:_ZN4lldb10SBDebugger10InitializeEv
 liblldb.so.9:_ZN4lldb10SBDebugger11GetCategoryENS_12LanguageTypeE
 liblldb.so.9:_ZN4lldb10SBDebugger11GetCategoryEPKc

@@ -6,7 +6,7 @@
 #
 Name     : lldb
 Version  : 9.0.0
-Release  : 1
+Release  : 2
 URL      : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz
 Source0  : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz
 Source1 : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz.sig
@@ -16,6 +16,7 @@ License  : ISC MIT
 Requires: lldb-bin = %{version}-%{release}
 Requires: lldb-lib = %{version}-%{release}
 Requires: lldb-license = %{version}-%{release}
+Requires: lldb-python = %{version}-%{release}
 Requires: ptyprocess
 BuildRequires : buildreq-cmake
 BuildRequires : buildreq-distutils3
@@ -31,6 +32,7 @@ BuildRequires : ptyprocess
 BuildRequires : python3
 BuildRequires : python3-dev
 BuildRequires : swig
+Patch1: 0001-Fix-build-with-Python-support-find-intermediate-file.patch
 
 %description
 =================
@@ -77,16 +79,25 @@ Group: Default
 license components for the lldb package.
 
 
+%package python
+Summary: python components for the lldb package.
+Group: Default
+
+%description python
+python components for the lldb package.
+
+
 %prep
 %setup -q -n lldb-9.0.0.src
 cd %{_builddir}/lldb-9.0.0.src
+%patch1 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1572448270
+export SOURCE_DATE_EPOCH=1572460965
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -103,13 +114,12 @@ export CXXFLAGS="$CXXFLAGS -fno-lto "
 -DLLVM_HOST_TRIPLE="x86_64-generic-linux" \
 -DLLVM_LIBDIR_SUFFIX=64 \
 -DLLVM_LINK_LLVM_DYLIB:BOOL=ON \
--DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3 \
--DLLDB_DISABLE_PYTHON=ON
+-DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3
 make  %{?_smp_mflags}  VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1572448270
+export SOURCE_DATE_EPOCH=1572460965
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/lldb
 cp %{_builddir}/lldb-9.0.0.src/third_party/Python/module/pexpect-4.6/LICENSE %{buildroot}/usr/share/package-licenses/lldb/5a99e7077ee89ba92fb3f584855e8970096cd5dc
@@ -641,3 +651,7 @@ popd
 /usr/share/package-licenses/lldb/5a99e7077ee89ba92fb3f584855e8970096cd5dc
 /usr/share/package-licenses/lldb/db1f866b29c6a191752c7c5924b7572cdbc47c34
 /usr/share/package-licenses/lldb/f226af67862c0c7a0e921e24672a3a1375691e3e
+
+%files python
+%defattr(-,root,root,-)
+/usr/lib64/python*/*
