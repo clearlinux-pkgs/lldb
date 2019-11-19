@@ -1,0 +1,71 @@
+From 13c26a7be6ab8426bc5f1efce000441cb6f8a2c3 Mon Sep 17 00:00:00 2001
+From: Michal Gorny <mgorny@gentoo.org>
+Date: Wed, 25 Sep 2019 09:47:35 +0000
+Subject: [PATCH] [lldb] [cmake] Fix installing Python modules on systems using
+ /usr/lib
+
+Fix installing Python modules on systems that use /usr/lib for Python
+while installing other libraries in /usr/lib64.  Rewrite CMake logic
+to query correct directories from Python, similarly to how
+prepare_binding_Python.py does it.  Furthermore, change the regex used
+in get_relative_lib_dir.py to allow 'lib' without suffix.
+
+I think that the code can be further improved but I'd like to take
+this enterprise in smaller steps in case one of them breaks something.
+
+Differential Revision: https://reviews.llvm.org/D67890
+
+git-svn-id: https://llvm.org/svn/llvm-project/lldb/trunk@372835 91177308-0d34-0410-b5e6-96231b3b80d8
+---
+ scripts/CMakeLists.txt          | 21 ++++++++++++---------
+ scripts/get_relative_lib_dir.py |  2 +-
+ 2 files changed, 13 insertions(+), 10 deletions(-)
+
+diff --git a/scripts/CMakeLists.txt b/scripts/CMakeLists.txt
+index 1a0ea96ff..7de797302 100644
+--- a/scripts/CMakeLists.txt
++++ b/scripts/CMakeLists.txt
+@@ -42,15 +42,18 @@ add_custom_target(swig_wrapper ALL DEPENDS
+ )
+ 
+ if(NOT LLDB_BUILD_FRAMEWORK)
+-  if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+-    set(swig_python_subdir site-packages)
+-  else()
+-    set(swig_python_subdir python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
+-  endif()
+-
+-  set(SWIG_PYTHON_DIR ${LLVM_LIBRARY_OUTPUT_INTDIR}/${swig_python_subdir})
+-  set(SWIG_INSTALL_DIR lib${LLVM_LIBDIR_SUFFIX})
++  execute_process(
++    COMMAND ${PYTHON_EXECUTABLE}
++        -c "import distutils.sysconfig, sys; print(distutils.sysconfig.get_python_lib(True, False, sys.argv[1]))"
++        ${CMAKE_BINARY_DIR}
++    OUTPUT_VARIABLE SWIG_PYTHON_DIR
++    OUTPUT_STRIP_TRAILING_WHITESPACE)
++  execute_process(
++    COMMAND ${PYTHON_EXECUTABLE}
++        -c "import distutils.sysconfig; print(distutils.sysconfig.get_python_lib(True, False, ''))"
++    OUTPUT_VARIABLE SWIG_INSTALL_DIR
++    OUTPUT_STRIP_TRAILING_WHITESPACE)
+ 
+   # Install the LLDB python module
+-  install(DIRECTORY ${SWIG_PYTHON_DIR} DESTINATION ${SWIG_INSTALL_DIR})
++  install(DIRECTORY ${SWIG_PYTHON_DIR}/ DESTINATION ${SWIG_INSTALL_DIR})
+ endif()
+diff --git a/scripts/get_relative_lib_dir.py b/scripts/get_relative_lib_dir.py
+index f7020d653..3afeeafd7 100644
+--- a/scripts/get_relative_lib_dir.py
++++ b/scripts/get_relative_lib_dir.py
+@@ -23,7 +23,7 @@ def get_python_relative_libdir():
+     # right answer always.
+     arch_specific_libdir = distutils.sysconfig.get_python_lib(True, False)
+     split_libdir = arch_specific_libdir.split(os.sep)
+-    lib_re = re.compile(r"^lib.+$")
++    lib_re = re.compile(r"^lib.*$")
+ 
+     for i in range(len(split_libdir)):
+         match = lib_re.match(split_libdir[i])
+-- 
+2.24.0
+

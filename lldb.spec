@@ -6,7 +6,7 @@
 #
 Name     : lldb
 Version  : 9.0.0
-Release  : 3
+Release  : 4
 URL      : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz
 Source0  : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz
 Source1 : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz.sig
@@ -33,7 +33,7 @@ BuildRequires : ptyprocess
 BuildRequires : python3
 BuildRequires : python3-dev
 BuildRequires : swig
-Patch1: 0001-Fix-build-with-Python-support-find-intermediate-file.patch
+Patch1: 0001-lldb-cmake-Fix-installing-Python-modules-on-systems-.patch
 
 %description
 =================
@@ -108,7 +108,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1574159502
+export SOURCE_DATE_EPOCH=1574169099
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -132,7 +132,7 @@ make  %{?_smp_mflags}  VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1574159502
+export SOURCE_DATE_EPOCH=1574169099
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/lldb
 cp %{_builddir}/lldb-9.0.0.src/LICENSE.TXT %{buildroot}/usr/share/package-licenses/lldb/8af372ad1edbed2cfaf0e79d25f7136ec6e55b47
@@ -145,7 +145,6 @@ popd
 ## install_append content
 pushd %{buildroot}/usr
 mkdir -p lib
-mv lib64/python* lib
 cd lib/python*/site-packages/lldb
 rm _lldb.so
 t=`readlink ../../../../lib64/liblldb.so`
