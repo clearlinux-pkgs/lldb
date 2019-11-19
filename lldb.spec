@@ -6,17 +6,18 @@
 #
 Name     : lldb
 Version  : 9.0.0
-Release  : 2
+Release  : 3
 URL      : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz
 Source0  : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz
 Source1 : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
-License  : ISC MIT
+License  : Apache-2.0 ISC MIT
 Requires: lldb-bin = %{version}-%{release}
 Requires: lldb-lib = %{version}-%{release}
 Requires: lldb-license = %{version}-%{release}
 Requires: lldb-python = %{version}-%{release}
+Requires: lldb-python3 = %{version}-%{release}
 Requires: ptyprocess
 BuildRequires : buildreq-cmake
 BuildRequires : buildreq-distutils3
@@ -82,9 +83,19 @@ license components for the lldb package.
 %package python
 Summary: python components for the lldb package.
 Group: Default
+Requires: lldb-python3 = %{version}-%{release}
 
 %description python
 python components for the lldb package.
+
+
+%package python3
+Summary: python3 components for the lldb package.
+Group: Default
+Requires: python3-core
+
+%description python3
+python3 components for the lldb package.
 
 
 %prep
@@ -97,13 +108,15 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1572460965
+export SOURCE_DATE_EPOCH=1574159502
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
 export CC=clang
 export CXX=clang++
 export LD=ld.gold
+CFLAGS=${CFLAGS/ -Wa,/ -fno-integrated-as -Wa,}
+CXXFLAGS=${CXXFLAGS/ -Wa,/ -fno-integrated-as -Wa,}
 unset LDFLAGS
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$CFLAGS -fno-lto "
@@ -119,15 +132,26 @@ make  %{?_smp_mflags}  VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1572460965
+export SOURCE_DATE_EPOCH=1574159502
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/lldb
+cp %{_builddir}/lldb-9.0.0.src/LICENSE.TXT %{buildroot}/usr/share/package-licenses/lldb/8af372ad1edbed2cfaf0e79d25f7136ec6e55b47
 cp %{_builddir}/lldb-9.0.0.src/third_party/Python/module/pexpect-4.6/LICENSE %{buildroot}/usr/share/package-licenses/lldb/5a99e7077ee89ba92fb3f584855e8970096cd5dc
 cp %{_builddir}/lldb-9.0.0.src/third_party/Python/module/ptyprocess-0.6.0/LICENSE %{buildroot}/usr/share/package-licenses/lldb/db1f866b29c6a191752c7c5924b7572cdbc47c34
 cp %{_builddir}/lldb-9.0.0.src/third_party/Python/module/six/LICENSE %{buildroot}/usr/share/package-licenses/lldb/f226af67862c0c7a0e921e24672a3a1375691e3e
 pushd clr-build
 %make_install
 popd
+## install_append content
+pushd %{buildroot}/usr
+mkdir -p lib
+mv lib64/python* lib
+cd lib/python*/site-packages/lldb
+rm _lldb.so
+t=`readlink ../../../../lib64/liblldb.so`
+ln -s ../../../../lib64/$t _lldb.so
+popd
+## install_append end
 
 %files
 %defattr(-,root,root,-)
@@ -649,9 +673,13 @@ popd
 %files license
 %defattr(0644,root,root,0755)
 /usr/share/package-licenses/lldb/5a99e7077ee89ba92fb3f584855e8970096cd5dc
+/usr/share/package-licenses/lldb/8af372ad1edbed2cfaf0e79d25f7136ec6e55b47
 /usr/share/package-licenses/lldb/db1f866b29c6a191752c7c5924b7572cdbc47c34
 /usr/share/package-licenses/lldb/f226af67862c0c7a0e921e24672a3a1375691e3e
 
 %files python
 %defattr(-,root,root,-)
-/usr/lib64/python*/*
+
+%files python3
+%defattr(-,root,root,-)
+/usr/lib/python3*/*

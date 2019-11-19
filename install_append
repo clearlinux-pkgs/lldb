@@ -1,0 +1,10 @@
+# -*- sh -*-
+# Fix the python installation
+pushd %{buildroot}/usr
+mkdir -p lib
+mv lib64/python* lib
+cd lib/python*/site-packages/lldb
+rm _lldb.so
+t=`readlink ../../../../lib64/liblldb.so`
+ln -s ../../../../lib64/$t _lldb.so
+popd
