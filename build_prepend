@@ -1,0 +1,2 @@
+export CFLAGS="${CFLAGS/ -Wa,/ -fno-integrated-as -Wa,}"
+export CXXFLAGS="${CXXFLAGS/ -Wa,/ -fno-integrated-as -Wa,}"

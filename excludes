@@ -1,2 +1,4 @@
 # This file contains the output files that need %exclude. Full path
 # names, one per line.
+/usr/lib/python3*/site-packages/__pycache__/six.cpython-3*.pyc
+/usr/lib/python3*/site-packages/six.py

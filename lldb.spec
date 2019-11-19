@@ -6,7 +6,7 @@
 #
 Name     : lldb
 Version  : 9.0.0
-Release  : 4
+Release  : 5
 URL      : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz
 Source0  : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz
 Source1 : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz.sig
@@ -104,19 +104,21 @@ cd %{_builddir}/lldb-9.0.0.src
 %patch1 -p1
 
 %build
+## build_prepend content
+export CFLAGS="${CFLAGS/ -Wa,/ -fno-integrated-as -Wa,}"
+export CXXFLAGS="${CXXFLAGS/ -Wa,/ -fno-integrated-as -Wa,}"
+## build_prepend end
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1574169099
+export SOURCE_DATE_EPOCH=1574191161
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
 export CC=clang
 export CXX=clang++
 export LD=ld.gold
-CFLAGS=${CFLAGS/ -Wa,/ -fno-integrated-as -Wa,}
-CXXFLAGS=${CXXFLAGS/ -Wa,/ -fno-integrated-as -Wa,}
 unset LDFLAGS
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$CFLAGS -fno-lto "
@@ -132,7 +134,7 @@ make  %{?_smp_mflags}  VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1574169099
+export SOURCE_DATE_EPOCH=1574191161
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/lldb
 cp %{_builddir}/lldb-9.0.0.src/LICENSE.TXT %{buildroot}/usr/share/package-licenses/lldb/8af372ad1edbed2cfaf0e79d25f7136ec6e55b47
@@ -142,6 +144,9 @@ cp %{_builddir}/lldb-9.0.0.src/third_party/Python/module/six/LICENSE %{buildroot
 pushd clr-build
 %make_install
 popd
+## Remove excluded files
+rm -f %{buildroot}/usr/lib/python3*/site-packages/__pycache__/six.cpython-3*.pyc
+rm -f %{buildroot}/usr/lib/python3*/site-packages/six.py
 ## install_append content
 pushd %{buildroot}/usr
 mkdir -p lib
