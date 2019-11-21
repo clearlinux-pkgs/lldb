@@ -6,7 +6,7 @@
 #
 Name     : lldb
 Version  : 9.0.0
-Release  : 5
+Release  : 6
 URL      : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz
 Source0  : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz
 Source1 : http://releases.llvm.org/9.0.0/lldb-9.0.0.src.tar.xz.sig
