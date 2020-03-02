@@ -6,11 +6,11 @@
 #
 Name     : lldb
 Version  : 9.0.1
-Release  : 9
+Release  : 10
 URL      : https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/lldb-9.0.1.src.tar.xz
 Source0  : https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/lldb-9.0.1.src.tar.xz
 Source1  : https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/lldb-9.0.1.src.tar.xz.sig
-Summary  : No detailed summary available
+Summary  : Next generation, high-performance debugger
 Group    : Development/Tools
 License  : Apache-2.0 ISC MIT
 Requires: lldb-bin = %{version}-%{release}
@@ -35,10 +35,17 @@ BuildRequires : python3-dev
 BuildRequires : swig
 
 %description
-Files in this directory:
-o .lldbinit:
-An example lldb init file that imports the binutils.py module and adds the
-following commands: 'itob' and 'utob'.
+# Table of Contents
+- [Introduction](#Introduction)
+- [Installation](#Installation-Visual-Studio-Code)
+- [Configurations](#configurations)
+- [Launch Configuration Settings](#launch-configuration-settings)
+- [Attach Configuration Settings](#attach-configuration-settings)
+- [Example configurations](#example-configurations)
+- [Launching](#launching)
+- [Attach to process using process ID](#attach-using-pid)
+- [Attach to process by name](#attach-by-name)
+- [Loading a core file](#loading-a-core-file)
 
 %package bin
 Summary: bin components for the lldb package.
@@ -55,6 +62,7 @@ Group: Development
 Requires: lldb-lib = %{version}-%{release}
 Requires: lldb-bin = %{version}-%{release}
 Provides: lldb-devel = %{version}-%{release}
+Requires: lldb = %{version}-%{release}
 Requires: lldb = %{version}-%{release}
 
 %description dev
@@ -109,9 +117,10 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1578631422
+export SOURCE_DATE_EPOCH=1583171554
 mkdir -p clr-build
 pushd clr-build
+# -Werror is for werrorists
 export GCC_IGNORE_WERROR=1
 export CC=clang
 export CXX=clang++
@@ -133,7 +142,7 @@ make  %{?_smp_mflags}  VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1578631422
+export SOURCE_DATE_EPOCH=1583171554
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/lldb
 cp %{_builddir}/lldb-9.0.1.src/LICENSE.TXT %{buildroot}/usr/share/package-licenses/lldb/8af372ad1edbed2cfaf0e79d25f7136ec6e55b47
