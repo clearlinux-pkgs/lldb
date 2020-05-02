@@ -6,7 +6,7 @@
 #
 Name     : lldb
 Version  : 10.0.0
-Release  : 11
+Release  : 12
 URL      : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/lldb-10.0.0.src.tar.xz
 Source0  : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/lldb-10.0.0.src.tar.xz
 Source1  : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/lldb-10.0.0.src.tar.xz.sig
@@ -36,6 +36,7 @@ BuildRequires : python3
 BuildRequires : python3-dev
 BuildRequires : swig
 BuildRequires : xz-dev
+Patch1: 0001-Fix-build-by-linking-to-libdl-and-libpthread.patch
 
 %description
 LLDB (Terminal) User Interface
@@ -101,6 +102,7 @@ python3 components for the lldb package.
 %prep
 %setup -q -n lldb-10.0.0.src
 cd %{_builddir}/lldb-10.0.0.src
+%patch1 -p1
 
 %build
 ## build_prepend content
@@ -111,7 +113,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1587166705
+export SOURCE_DATE_EPOCH=1588380002
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -130,12 +132,13 @@ export CXXFLAGS="$CXXFLAGS -fno-lto "
 -DLLVM_HOST_TRIPLE="x86_64-generic-linux" \
 -DLLVM_LIBDIR_SUFFIX=64 \
 -DLLVM_LINK_LLVM_DYLIB:BOOL=ON \
+-DCLANG_LINK_CLANG_DYLIB:BOOL=ON \
 -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3
 make  %{?_smp_mflags}  VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1587166705
+export SOURCE_DATE_EPOCH=1588380002
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/lldb
 cp %{_builddir}/lldb-10.0.0.src/LICENSE.TXT %{buildroot}/usr/share/package-licenses/lldb/8af372ad1edbed2cfaf0e79d25f7136ec6e55b47
