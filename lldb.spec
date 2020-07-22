@@ -5,11 +5,11 @@
 # Source0 file verified with key 0x0FC3042E345AD05D (hans@chromium.org)
 #
 Name     : lldb
-Version  : 10.0.0
+Version  : 10.0.1
 Release  : 12
-URL      : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/lldb-10.0.0.src.tar.xz
-Source0  : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/lldb-10.0.0.src.tar.xz
-Source1  : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/lldb-10.0.0.src.tar.xz.sig
+URL      : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/lldb-10.0.1.src.tar.xz
+Source0  : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/lldb-10.0.1.src.tar.xz
+Source1  : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/lldb-10.0.1.src.tar.xz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 ISC MIT
@@ -100,8 +100,8 @@ python3 components for the lldb package.
 
 
 %prep
-%setup -q -n lldb-10.0.0.src
-cd %{_builddir}/lldb-10.0.0.src
+%setup -q -n lldb-10.0.1.src
+cd %{_builddir}/lldb-10.0.1.src
 %patch1 -p1
 
 %build
@@ -141,10 +141,10 @@ popd
 export SOURCE_DATE_EPOCH=1588380002
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/lldb
-cp %{_builddir}/lldb-10.0.0.src/LICENSE.TXT %{buildroot}/usr/share/package-licenses/lldb/8af372ad1edbed2cfaf0e79d25f7136ec6e55b47
-cp %{_builddir}/lldb-10.0.0.src/third_party/Python/module/pexpect-4.6/LICENSE %{buildroot}/usr/share/package-licenses/lldb/5a99e7077ee89ba92fb3f584855e8970096cd5dc
-cp %{_builddir}/lldb-10.0.0.src/third_party/Python/module/ptyprocess-0.6.0/LICENSE %{buildroot}/usr/share/package-licenses/lldb/db1f866b29c6a191752c7c5924b7572cdbc47c34
-cp %{_builddir}/lldb-10.0.0.src/third_party/Python/module/six/LICENSE %{buildroot}/usr/share/package-licenses/lldb/f226af67862c0c7a0e921e24672a3a1375691e3e
+cp %{_builddir}/lldb-10.0.1.src/LICENSE.TXT %{buildroot}/usr/share/package-licenses/lldb/8af372ad1edbed2cfaf0e79d25f7136ec6e55b47
+cp %{_builddir}/lldb-10.0.1.src/third_party/Python/module/pexpect-4.6/LICENSE %{buildroot}/usr/share/package-licenses/lldb/5a99e7077ee89ba92fb3f584855e8970096cd5dc
+cp %{_builddir}/lldb-10.0.1.src/third_party/Python/module/ptyprocess-0.6.0/LICENSE %{buildroot}/usr/share/package-licenses/lldb/db1f866b29c6a191752c7c5924b7572cdbc47c34
+cp %{_builddir}/lldb-10.0.1.src/third_party/Python/module/six/LICENSE %{buildroot}/usr/share/package-licenses/lldb/f226af67862c0c7a0e921e24672a3a1375691e3e
 pushd clr-build
 %make_install
 popd
@@ -672,7 +672,7 @@ popd
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/liblldb.so.10
-/usr/lib64/liblldb.so.10.0.0
+/usr/lib64/liblldb.so.10.0.1
 /usr/lib64/liblldbIntelFeatures.so.10
 
 %files license
