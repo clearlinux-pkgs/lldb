@@ -6,7 +6,7 @@
 #
 Name     : lldb
 Version  : 10.0.1
-Release  : 15
+Release  : 16
 URL      : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/lldb-10.0.1.src.tar.xz
 Source0  : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/lldb-10.0.1.src.tar.xz
 Summary  : No detailed summary available
