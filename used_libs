@@ -4,13 +4,13 @@ libc.so.6
 libclang-cpp.so.10
 libdl.so.2
 libedit.so.0
-liblua.so.5.3
+liblua.so.5.4
 liblzma.so.5
 libm.so.6
 libncurses.so.6
 libpanel.so.6
 libpthread.so.0
-libpython3.8.so.1.0
+libpython3.9.so.1.0
 libstdc++.so.6
 libtinfo.so.6
 libxml2.so.2
