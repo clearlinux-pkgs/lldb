@@ -5,11 +5,11 @@
 # Source0 file verified with key 0xA2C794A986419D8A (tstellar@redhat.com)
 #
 Name     : lldb
-Version  : 10.0.1
-Release  : 20
-URL      : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/lldb-10.0.1.src.tar.xz
-Source0  : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/lldb-10.0.1.src.tar.xz
-Source1  : https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/lldb-10.0.1.src.tar.xz.sig
+Version  : 11.1.0
+Release  : 21
+URL      : https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/lldb-11.1.0.src.tar.xz
+Source0  : https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/lldb-11.1.0.src.tar.xz
+Source1  : https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/lldb-11.1.0.src.tar.xz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 ISC MIT
@@ -101,8 +101,8 @@ python3 components for the lldb package.
 
 
 %prep
-%setup -q -n lldb-10.0.1.src
-cd %{_builddir}/lldb-10.0.1.src
+%setup -q -n lldb-11.1.0.src
+cd %{_builddir}/lldb-11.1.0.src
 %patch1 -p1
 
 %build
@@ -114,7 +114,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1615419012
+export SOURCE_DATE_EPOCH=1618934589
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -139,13 +139,13 @@ make  %{?_smp_mflags}
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1615419012
+export SOURCE_DATE_EPOCH=1618934589
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/lldb
-cp %{_builddir}/lldb-10.0.1.src/LICENSE.TXT %{buildroot}/usr/share/package-licenses/lldb/8af372ad1edbed2cfaf0e79d25f7136ec6e55b47
-cp %{_builddir}/lldb-10.0.1.src/third_party/Python/module/pexpect-4.6/LICENSE %{buildroot}/usr/share/package-licenses/lldb/5a99e7077ee89ba92fb3f584855e8970096cd5dc
-cp %{_builddir}/lldb-10.0.1.src/third_party/Python/module/ptyprocess-0.6.0/LICENSE %{buildroot}/usr/share/package-licenses/lldb/db1f866b29c6a191752c7c5924b7572cdbc47c34
-cp %{_builddir}/lldb-10.0.1.src/third_party/Python/module/six/LICENSE %{buildroot}/usr/share/package-licenses/lldb/f226af67862c0c7a0e921e24672a3a1375691e3e
+cp %{_builddir}/lldb-11.1.0.src/LICENSE.TXT %{buildroot}/usr/share/package-licenses/lldb/8af372ad1edbed2cfaf0e79d25f7136ec6e55b47
+cp %{_builddir}/lldb-11.1.0.src/third_party/Python/module/pexpect-4.6/LICENSE %{buildroot}/usr/share/package-licenses/lldb/5a99e7077ee89ba92fb3f584855e8970096cd5dc
+cp %{_builddir}/lldb-11.1.0.src/third_party/Python/module/ptyprocess-0.6.0/LICENSE %{buildroot}/usr/share/package-licenses/lldb/db1f866b29c6a191752c7c5924b7572cdbc47c34
+cp %{_builddir}/lldb-11.1.0.src/third_party/Python/module/six/LICENSE %{buildroot}/usr/share/package-licenses/lldb/f226af67862c0c7a0e921e24672a3a1375691e3e
 pushd clr-build
 %make_install
 popd
@@ -185,6 +185,7 @@ popd
 /usr/include/lldb/API/SBBreakpointName.h
 /usr/include/lldb/API/SBBroadcaster.h
 /usr/include/lldb/API/SBCommandInterpreter.h
+/usr/include/lldb/API/SBCommandInterpreterRunOptions.h
 /usr/include/lldb/API/SBCommandReturnObject.h
 /usr/include/lldb/API/SBCommunication.h
 /usr/include/lldb/API/SBCompileUnit.h
@@ -192,6 +193,7 @@ popd
 /usr/include/lldb/API/SBDebugger.h
 /usr/include/lldb/API/SBDeclaration.h
 /usr/include/lldb/API/SBDefines.h
+/usr/include/lldb/API/SBEnvironment.h
 /usr/include/lldb/API/SBError.h
 /usr/include/lldb/API/SBEvent.h
 /usr/include/lldb/API/SBExecutionContext.h
@@ -275,7 +277,6 @@ popd
 /usr/include/lldb/Core/AddressResolverFileLine.h
 /usr/include/lldb/Core/AddressResolverName.h
 /usr/include/lldb/Core/Architecture.h
-/usr/include/lldb/Core/ClangForward.h
 /usr/include/lldb/Core/Communication.h
 /usr/include/lldb/Core/Debugger.h
 /usr/include/lldb/Core/Disassembler.h
@@ -399,7 +400,6 @@ popd
 /usr/include/lldb/Host/Socket.h
 /usr/include/lldb/Host/SocketAddress.h
 /usr/include/lldb/Host/StringConvert.h
-/usr/include/lldb/Host/TaskPool.h
 /usr/include/lldb/Host/Terminal.h
 /usr/include/lldb/Host/ThreadLauncher.h
 /usr/include/lldb/Host/Time.h
@@ -496,17 +496,11 @@ popd
 /usr/include/lldb/Symbol/ArmUnwindInfo.h
 /usr/include/lldb/Symbol/Block.h
 /usr/include/lldb/Symbol/CallFrameInfo.h
-/usr/include/lldb/Symbol/ClangASTContext.h
-/usr/include/lldb/Symbol/ClangASTImporter.h
-/usr/include/lldb/Symbol/ClangASTMetadata.h
-/usr/include/lldb/Symbol/ClangExternalASTSourceCallbacks.h
-/usr/include/lldb/Symbol/ClangUtil.h
 /usr/include/lldb/Symbol/CompactUnwindInfo.h
 /usr/include/lldb/Symbol/CompileUnit.h
 /usr/include/lldb/Symbol/CompilerDecl.h
 /usr/include/lldb/Symbol/CompilerDeclContext.h
 /usr/include/lldb/Symbol/CompilerType.h
-/usr/include/lldb/Symbol/CxxModuleHandler.h
 /usr/include/lldb/Symbol/DWARFCallFrameInfo.h
 /usr/include/lldb/Symbol/DebugMacros.h
 /usr/include/lldb/Symbol/DeclVendor.h
@@ -536,6 +530,7 @@ popd
 /usr/include/lldb/Symbol/Variable.h
 /usr/include/lldb/Symbol/VariableList.h
 /usr/include/lldb/Target/ABI.h
+/usr/include/lldb/Target/AssertFrameRecognizer.h
 /usr/include/lldb/Target/DynamicLoader.h
 /usr/include/lldb/Target/ExecutionContext.h
 /usr/include/lldb/Target/ExecutionContextScope.h
@@ -559,6 +554,7 @@ popd
 /usr/include/lldb/Target/QueueList.h
 /usr/include/lldb/Target/RegisterCheckpoint.h
 /usr/include/lldb/Target/RegisterContext.h
+/usr/include/lldb/Target/RegisterContextUnwind.h
 /usr/include/lldb/Target/RegisterNumber.h
 /usr/include/lldb/Target/RemoteAwarePlatform.h
 /usr/include/lldb/Target/SectionLoadHistory.h
@@ -584,6 +580,7 @@ popd
 /usr/include/lldb/Target/ThreadPlanPython.h
 /usr/include/lldb/Target/ThreadPlanRunToAddress.h
 /usr/include/lldb/Target/ThreadPlanShouldStopHere.h
+/usr/include/lldb/Target/ThreadPlanStack.h
 /usr/include/lldb/Target/ThreadPlanStepInRange.h
 /usr/include/lldb/Target/ThreadPlanStepInstruction.h
 /usr/include/lldb/Target/ThreadPlanStepOut.h
@@ -597,6 +594,7 @@ popd
 /usr/include/lldb/Target/UnixSignals.h
 /usr/include/lldb/Target/Unwind.h
 /usr/include/lldb/Target/UnwindAssembly.h
+/usr/include/lldb/Target/UnwindLLDB.h
 /usr/include/lldb/Utility/AnsiTerminal.h
 /usr/include/lldb/Utility/ArchSpec.h
 /usr/include/lldb/Utility/Args.h
@@ -633,7 +631,6 @@ popd
 /usr/include/lldb/Utility/Scalar.h
 /usr/include/lldb/Utility/SelectHelper.h
 /usr/include/lldb/Utility/SharedCluster.h
-/usr/include/lldb/Utility/SharingPtr.h
 /usr/include/lldb/Utility/State.h
 /usr/include/lldb/Utility/Status.h
 /usr/include/lldb/Utility/Stream.h
@@ -655,6 +652,7 @@ popd
 /usr/include/lldb/Utility/UserIDResolver.h
 /usr/include/lldb/Utility/VASPrintf.h
 /usr/include/lldb/Utility/VMRange.h
+/usr/include/lldb/Utility/XcodeSDK.h
 /usr/include/lldb/lldb-defines.h
 /usr/include/lldb/lldb-enumerations.h
 /usr/include/lldb/lldb-forward.h
@@ -672,9 +670,9 @@ popd
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/liblldb.so.10
-/usr/lib64/liblldb.so.10.0.1
-/usr/lib64/liblldbIntelFeatures.so.10
+/usr/lib64/liblldb.so.11
+/usr/lib64/liblldb.so.11.1.0
+/usr/lib64/liblldbIntelFeatures.so.11
 
 %files license
 %defattr(0644,root,root,0755)

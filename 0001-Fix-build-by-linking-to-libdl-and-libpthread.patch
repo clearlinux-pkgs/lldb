@@ -1,46 +1,40 @@
-From 10997abe9152ffa2a319c406bcd857c5f802382d Mon Sep 17 00:00:00 2001
+From b7c65e5f04988142c1a95bdd23463355e275a026 Mon Sep 17 00:00:00 2001
 From: Thiago Macieira <thiago.macieira@intel.com>
 Date: Fri, 1 May 2020 16:57:01 -0700
 Subject: [llvm] Fix build by linking to libdl and libpthread
 
-/builddir/build/BUILD/llvm-10.0.0.src/lib/Support/Unix/Process.inc:235: undefined reference to `pthread_sigmask'
-/usr/bin/ld: /builddir/build/BUILD/llvm-10.0.0.src/lib/Support/Unix/Process.inc:250: undefined reference to `pthread_sigmask'
-/usr/bin/ld: /usr/bin/../lib64/gcc/x86_64-generic-linux/9/../../../../lib64/libLLVMSupport.a(Process.cpp.o): in function `terminalHasColors(int)':
-/builddir/build/BUILD/llvm-10.0.0.src/lib/Support/Unix/Process.inc:338: undefined reference to `setupterm'
-/usr/bin/ld: /builddir/build/BUILD/llvm-10.0.0.src/lib/Support/Unix/Process.inc:356: undefined reference to `tigetnum'
-/usr/bin/ld: /builddir/build/BUILD/llvm-10.0.0.src/lib/Support/Unix/Process.inc:360: undefined reference to `set_curterm'
-/usr/bin/ld: /builddir/build/BUILD/llvm-10.0.0.src/lib/Support/Unix/Process.inc:361: undefined reference to `del_curterm'
-/usr/bin/ld: /usr/bin/../lib64/gcc/x86_64-generic-linux/9/../../../../lib64/libLLVMSupport.a(ThreadLocal.cpp.o): in function `ThreadLocalImpl':
-/builddir/build/BUILD/llvm-10.0.0.src/lib/Support/Unix/ThreadLocal.inc:32: undefined reference to `pthread_key_create'
-/usr/bin/ld: /usr/bin/../lib64/gcc/x86_64-generic-linux/9/../../../../lib64/libLLVMSupport.a(ThreadLocal.cpp.o): in function `~ThreadLocalImpl':
-/builddir/build/BUILD/llvm-10.0.0.src/lib/Support/Unix/ThreadLocal.inc:39: undefined reference to `pthread_key_delete'
-/usr/bin/ld: /builddir/build/BUILD/llvm-10.0.0.src/lib/Support/Unix/ThreadLocal.inc:39: undefined reference to `pthread_key_delete'
-/usr/bin/ld: /usr/bin/../lib64/gcc/x86_64-generic-linux/9/../../../../lib64/libLLVMSupport.a(ThreadLocal.cpp.o): in function `llvm::sys::ThreadLocalImpl::setInstance(void const*)':
-/builddir/build/BUILD/llvm-10.0.0.src/lib/Support/Unix/ThreadLocal.inc:46: undefined reference to `pthread_setspecific'
-/usr/bin/ld: /usr/bin/../lib64/gcc/x86_64-generic-linux/9/../../../../lib64/libLLVMSupport.a(ThreadLocal.cpp.o): in function `llvm::sys::ThreadLocalImpl::getInstance()':
-/builddir/build/BUILD/llvm-10.0.0.src/lib/Support/Unix/ThreadLocal.inc:53: undefined reference to `pthread_getspecific'
+/usr/bin/ld: /usr/bin/../lib64/gcc/x86_64-generic-linux/10/../../../../lib64/libLLVMSupport.a(Process.cpp.o): in function `llvm::sys::Process::SafelyCloseFileDescriptor(int)':
+/builddir/build/BUILD/llvm-11.1.0.src/lib/Support/Unix/Process.inc:241: undefined reference to `pthread_sigmask'
+/usr/bin/ld: /builddir/build/BUILD/llvm-11.1.0.src/lib/Support/Unix/Process.inc:256: undefined reference to `pthread_sigmask'
+/usr/bin/ld: /usr/bin/../lib64/gcc/x86_64-generic-linux/10/../../../../lib64/libLLVMSupport.a(Process.cpp.o): in function `terminalHasColors(int)':
+/builddir/build/BUILD/llvm-11.1.0.src/lib/Support/Unix/Process.inc:336: undefined reference to `setupterm'
+/usr/bin/ld: /builddir/build/BUILD/llvm-11.1.0.src/lib/Support/Unix/Process.inc:354: undefined reference to `tigetnum'
+/usr/bin/ld: /builddir/build/BUILD/llvm-11.1.0.src/lib/Support/Unix/Process.inc:358: undefined reference to `set_curterm'
+/usr/bin/ld: /builddir/build/BUILD/llvm-11.1.0.src/lib/Support/Unix/Process.inc:359: undefined reference to `del_curterm'
+clang-11: error: linker command failed with exit code 1 (use -v to see invocation)
 
 Inspired by:  https://build.opensuse.org/package/view_file/devel:tools:compiler/llvm10/lldb-cmake.patch?expand=1
 ---
- lldb/source/Host/CMakeLists.txt     | 2 ++
+ lldb/source/Host/CMakeLists.txt     | 3 +++
  lldb/utils/lit-cpuid/CMakeLists.txt | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
 diff --git lldb/source/Host/CMakeLists.txt lldb/source/Host/CMakeLists.txt
-index 2e9bb402227..5594af00484 100644
+index add503a5f36a..e19afca955a2 100644
 --- lldb/source/Host/CMakeLists.txt
 +++ lldb/source/Host/CMakeLists.txt
-@@ -144,6 +144,8 @@ endif()
- set(EXTRA_LIBS)
- if (CMAKE_SYSTEM_NAME MATCHES "NetBSD")
-   list(APPEND EXTRA_LIBS kvm)
-+elseif (CMAKE_SYSTEM_NAME MATCHES "Linux")
+@@ -140,6 +140,9 @@ endif()
+ if (LLDB_ENABLE_LIBXML2)
+   list(APPEND EXTRA_LIBS ${LIBXML2_LIBRARIES})
+ endif()
++if (CMAKE_SYSTEM_NAME MATCHES "Linux")
 +  list(APPEND EXTRA_LIBS dl pthread)
- endif ()
- if (APPLE)
-   list(APPEND EXTRA_LIBS xml2)
++endif ()
+ if (HAVE_LIBDL)
+   list(APPEND EXTRA_LIBS ${CMAKE_DL_LIBS})
+ endif()
 diff --git lldb/utils/lit-cpuid/CMakeLists.txt lldb/utils/lit-cpuid/CMakeLists.txt
-index f365447dd27..1991ff08545 100644
+index f365447dd27d..1991ff08545b 100644
 --- lldb/utils/lit-cpuid/CMakeLists.txt
 +++ lldb/utils/lit-cpuid/CMakeLists.txt
 @@ -2,5 +2,5 @@ add_lldb_executable(lit-cpuid
@@ -51,5 +45,5 @@ index f365447dd27..1991ff08545 100644
 +target_link_libraries(lit-cpuid PRIVATE LLVMSupport pthread ncurses)
  set_target_properties(lit-cpuid PROPERTIES FOLDER "lldb utils")
 -- 
-2.26.2
+2.31.1
 
