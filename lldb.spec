@@ -6,7 +6,7 @@
 #
 Name     : lldb
 Version  : 11.1.0
-Release  : 24
+Release  : 25
 URL      : https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/lldb-11.1.0.src.tar.xz
 Source0  : https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/lldb-11.1.0.src.tar.xz
 Source1  : https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/lldb-11.1.0.src.tar.xz.sig
