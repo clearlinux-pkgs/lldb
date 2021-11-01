@@ -6,7 +6,7 @@
 #
 Name     : lldb
 Version  : 11.1.0
-Release  : 28
+Release  : 29
 URL      : https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/lldb-11.1.0.src.tar.xz
 Source0  : https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/lldb-11.1.0.src.tar.xz
 Source1  : https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/lldb-11.1.0.src.tar.xz.sig
@@ -114,7 +114,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1618934589
+export SOURCE_DATE_EPOCH=1635751001
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -139,7 +139,7 @@ make  %{?_smp_mflags}
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1618934589
+export SOURCE_DATE_EPOCH=1635751001
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/lldb
 cp %{_builddir}/lldb-11.1.0.src/LICENSE.TXT %{buildroot}/usr/share/package-licenses/lldb/8af372ad1edbed2cfaf0e79d25f7136ec6e55b47
@@ -150,8 +150,8 @@ pushd clr-build
 %make_install
 popd
 ## Remove excluded files
-rm -f %{buildroot}/usr/lib/python3*/site-packages/__pycache__/six.cpython-3*.pyc
-rm -f %{buildroot}/usr/lib/python3*/site-packages/six.py
+rm -f %{buildroot}*/usr/lib/python3*/site-packages/__pycache__/six.cpython-3*.pyc
+rm -f %{buildroot}*/usr/lib/python3*/site-packages/six.py
 ## install_append content
 # Fix the python installation
 pushd %{buildroot}/usr
